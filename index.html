@@ -275,7 +275,7 @@
 
         <div class="cover">
           <div class="cover-img" id="coverImg">SMARTPHONES<br>IN MINECRAFT</div>
-          <label class="upload-btn" for="coverInput">📷 Заменить обложку</label>
+          <label class="upload-btn" for="coverInput">📷 Заменить обложку (предпросмотр)</label>
           <input type="file" id="coverInput" accept="image/*" hidden>
         </div>
 
@@ -290,11 +290,12 @@
         <input type="file" id="screensInput" accept="image/*" multiple hidden>
 
         <h2 class="section-title">Видео</h2>
-        <div class="video-box" id="videoBox">▶ Обзор модов — iCraft</div>
+        <!-- Чтобы видео открывалось по клику у ВСЕХ посетителей, впиши свою ссылку сюда: -->
+        <div class="video-box" id="videoBox" data-video-link="">▶ Обзор модов — iCraft</div>
         <div class="upload-row">
-          <label class="upload-btn" for="videoThumbInput">🖼 Обложка видео</label>
+          <label class="upload-btn" for="videoThumbInput">🖼 Обложка видео (предпросмотр)</label>
           <input type="file" id="videoThumbInput" accept="image/*" hidden>
-          <button class="upload-btn" id="videoLinkBtn" type="button">🔗 Ссылка на видео</button>
+          <button class="upload-btn" id="videoLinkBtn" type="button">🔗 Ссылка на видео (предпросмотр)</button>
         </div>
 
         <h2 class="section-title">Рецепты</h2>
@@ -316,17 +317,18 @@
           <li>Готово</li>
         </ol>
 
-        <h2 class="section-title">Скачать iCraft <span class="reset-link" id="resetBtn">сбросить мои файлы</span></h2>
+        <h2 class="section-title">Скачать iCraft <span class="reset-link" id="resetBtn">сбросить предпросмотр</span></h2>
         <div class="upload-row">
-          <label class="upload-btn" for="fileInput">📦 Загрузить файл мода</label>
+          <label class="upload-btn" for="fileInput">📦 Загрузить файл мода (предпросмотр)</label>
           <input type="file" id="fileInput" hidden>
-          <button class="upload-btn" id="fileLinkBtn" type="button">🔗 Указать ссылку на файл</button>
+          <button class="upload-btn" id="fileLinkBtn" type="button">🔗 Указать ссылку на файл (предпросмотр)</button>
         </div>
         <table class="dl">
           <tr><th>#</th><th>Ссылка</th><th>Размер</th><th>Дата</th></tr>
           <tr>
-            <td class="dlicon"><a id="dlIconLink" href="#"><span class="dl-circle">⬇</span></a></td>
-            <td>Для 1.7.10 <span class="forge-tag">forge</span><br><a id="dlLink" href="#">https://minecraft-inside.ru/download/100710/</a></td>
+            <!-- Настоящая ссылка на файл для ВСЕХ посетителей — files/icraft-1.7.10.zip -->
+            <td class="dlicon"><a id="dlIconLink" href="files/icraft-1.7.10.zip" download><span class="dl-circle">⬇</span></a></td>
+            <td>Для 1.7.10 <span class="forge-tag">forge</span><br><a id="dlLink" href="files/icraft-1.7.10.zip" download>files/icraft-1.7.10.zip</a></td>
             <td id="dlSize">569,92 КБ</td>
             <td id="dlDate">9 января 2019</td>
           </tr>
@@ -592,9 +594,17 @@
   /* ---- Cover image ---- */
   var coverImg = document.getElementById('coverImg');
   var coverInput = document.getElementById('coverInput');
+  function tryLoad(url, onOk){
+    var img = new Image();
+    img.onload = function(){ onOk(url); };
+    img.onerror = function(){};
+    img.src = url;
+  }
   function renderCover(){
     var data = LS.getItem('mi_cover');
-    if(data){ coverImg.style.backgroundImage = 'url(' + data + ')'; coverImg.textContent=''; }
+    if(data){ coverImg.style.backgroundImage = 'url(' + data + ')'; coverImg.textContent=''; return; }
+    tryLoad('images/cover.jpg', function(url){ coverImg.style.backgroundImage = 'url(' + url + ')'; coverImg.textContent=''; });
+    tryLoad('images/cover.png', function(url){ coverImg.style.backgroundImage = 'url(' + url + ')'; coverImg.textContent=''; });
   }
   coverInput.addEventListener('change', function(e){
     var f = e.target.files[0]; if(!f) return;
@@ -611,20 +621,58 @@
   function showMain(src){ mainScreen.style.backgroundImage = 'url(' + src + ')'; mainScreen.textContent=''; }
   function renderScreens(){
     var arr = getScreens();
-    thumbRow.innerHTML = '';
-    arr.forEach(function(src, i){
-      var d = document.createElement('div');
-      d.className = 'thumb' + (i === activeIdx ? ' active' : '');
-      d.style.backgroundImage = 'url(' + src + ')';
-      d.addEventListener('click', function(){ activeIdx = i; showMain(src); renderScreens(); });
-      thumbRow.appendChild(d);
-    });
-    var addLabel = document.createElement('label');
-    addLabel.className = 'thumb add-thumb';
-    addLabel.setAttribute('for', 'screensInput');
-    addLabel.textContent = '+';
-    thumbRow.appendChild(addLabel);
-    if(arr.length) showMain(arr[activeIdx] || arr[0]);
+    if(arr.length){
+      thumbRow.innerHTML = '';
+      arr.forEach(function(src, i){
+        var d = document.createElement('div');
+        d.className = 'thumb' + (i === activeIdx ? ' active' : '');
+        d.style.backgroundImage = 'url(' + src + ')';
+        d.addEventListener('click', function(){ activeIdx = i; showMain(src); renderScreens(); });
+        thumbRow.appendChild(d);
+      });
+      var addLabel = document.createElement('label');
+      addLabel.className = 'thumb add-thumb';
+      addLabel.setAttribute('for', 'screensInput');
+      addLabel.textContent = '+';
+      thumbRow.appendChild(addLabel);
+      showMain(arr[activeIdx] || arr[0]);
+      return;
+    }
+    /* No local preview saved — try loading real files images/screenshot-1.jpg ... screenshot-8.jpg */
+    var found = [];
+    var toCheck = 8;
+    var checked = 0;
+    for(var i = 1; i <= toCheck; i++){
+      (function(n){
+        tryLoad('images/screenshot-' + n + '.jpg', function(url){ found.push({n:n, url:url}); afterCheck(); });
+      })(i);
+    }
+    function afterCheck(){
+      checked++;
+      if(checked === toCheck){
+        found.sort(function(a,b){ return a.n - b.n; });
+        if(found.length){
+          thumbRow.innerHTML = '';
+          found.forEach(function(item, i){
+            var d = document.createElement('div');
+            d.className = 'thumb' + (i === 0 ? ' active' : '');
+            d.style.backgroundImage = 'url(' + item.url + ')';
+            d.addEventListener('click', function(){
+              document.querySelectorAll('#thumbRow .thumb').forEach(function(t){ t.classList.remove('active'); });
+              d.classList.add('active');
+              showMain(item.url);
+            });
+            thumbRow.appendChild(d);
+          });
+          var addLabel = document.createElement('label');
+          addLabel.className = 'thumb add-thumb';
+          addLabel.setAttribute('for', 'screensInput');
+          addLabel.textContent = '+';
+          thumbRow.appendChild(addLabel);
+          showMain(found[0].url);
+        }
+      }
+    }
   }
   screensInput.addEventListener('change', function(e){
     var files = Array.prototype.slice.call(e.target.files);
@@ -642,18 +690,19 @@
   var videoLinkBtn = document.getElementById('videoLinkBtn');
   function renderVideo(){
     var thumb = LS.getItem('mi_video_thumb');
-    if(thumb){ videoBox.style.backgroundImage = 'url(' + thumb + ')'; }
+    if(thumb){ videoBox.style.backgroundImage = 'url(' + thumb + ')'; return; }
+    tryLoad('images/video-thumb.jpg', function(url){ videoBox.style.backgroundImage = 'url(' + url + ')'; });
   }
   videoThumbInput.addEventListener('change', function(e){
     var f = e.target.files[0]; if(!f) return;
     readAsDataURL(f).then(function(data){ LS.setItem('mi_video_thumb', data); renderVideo(); });
   });
   videoLinkBtn.addEventListener('click', function(){
-    var url = prompt('Вставьте ссылку на видео (например, YouTube):', LS.getItem('mi_video_link') || 'https://');
+    var url = prompt('Вставьте ссылку на видео для предпросмотра (например, YouTube):', LS.getItem('mi_video_link') || 'https://');
     if(url){ LS.setItem('mi_video_link', url); }
   });
   videoBox.addEventListener('click', function(){
-    var url = LS.getItem('mi_video_link');
+    var url = LS.getItem('mi_video_link') || videoBox.getAttribute('data-video-link');
     if(url) window.open(url, '_blank');
     else videoLinkBtn.click();
   });
@@ -667,6 +716,7 @@
   var dlDate = document.getElementById('dlDate');
 
   function renderDownload(){
+    /* local preview overrides everything, for testing before you commit real files */
     var link = LS.getItem('mi_file_link');
     var name = LS.getItem('mi_file_name');
     var data = LS.getItem('mi_file_data');
@@ -683,6 +733,7 @@
       dlSize.textContent = size || '';
       dlDate.textContent = date || '';
     }
+    /* otherwise: keep the real files/icraft-1.7.10.zip link already in the HTML */
   }
   fileInput.addEventListener('change', function(e){
     var f = e.target.files[0]; if(!f) return;
@@ -710,9 +761,9 @@
     }
   });
 
-  /* ---- Reset ---- */
+  /* ---- Reset local preview ---- */
   document.getElementById('resetBtn').addEventListener('click', function(){
-    if(confirm('Удалить все загруженные вами фото и файл, вернуть заглушки?')){
+    if(confirm('Убрать локальный предпросмотр и вернуться к настоящим файлам из папок images/ и files/?')){
       ['mi_cover','mi_screens','mi_video_thumb','mi_video_link','mi_file_link','mi_file_data','mi_file_name','mi_file_size','mi_file_date']
         .forEach(function(k){ LS.removeItem(k); });
       location.reload();
