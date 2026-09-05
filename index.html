@@ -3,229 +3,541 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Картотека файлов</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>iCraft [1.7.10] — Minecraft Inside</title>
 <style>
   :root{
-    --paper:#F3ECD9;
-    --paper-dark:#E4D9BC;
-    --ink:#211C15;
-    --ink-soft:#5B5142;
-    --kraft:#C9A66B;
-    --kraft-dark:#A9814A;
-    --stamp:#A93B32;
-    --stamp-dark:#7E2C25;
-    --line:#C7B78F;
-    --shadow: 0 2px 0 rgba(33,28,21,0.08), 0 10px 24px rgba(33,28,21,0.12);
+    --page-bg:#121213;
+    --sky-top:#082b48;
+    --sky-mid:#0f4a72;
+    --card:#1a1b1b;
+    --card-alt:#1a2126;
+    --row:#2b2b2b;
+    --row-alt:#242424;
+    --slot:#252525;
+    --table-head:#5c5c5c;
+    --green-nav:#3f8a0d;
+    --green-nav-lo:#337209;
+    --green-heading:#28a300;
+    --dl-green:#5db85e;
+    --text:#d8d8d8;
+    --text-dim:#8a8a8a;
+    --link:#89b6d9;
+    --white:#f2f2f2;
+    --accent:#f0d98a;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
   body{
-    background:
-      radial-gradient(1200px 600px at 10% -10%, #FBF7EC 0%, transparent 60%),
-      var(--paper);
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    min-height:100vh;
-    padding:40px 20px 80px;
+    margin:0;
+    font-family:"Segoe UI", Tahoma, Arial, sans-serif;
+    background:var(--page-bg);
+    color:var(--text);
+    font-size:14px;
+    line-height:1.55;
   }
-  .wrap{max-width:760px;margin:0 auto;}
+  a{color:var(--link); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 16px;}
 
-  header{margin-bottom:32px;}
-  .eyebrow{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    color:var(--kraft-dark);
-    display:flex;align-items:center;gap:10px;
+  /* hero sky behind header + nav */
+  .hero-sky{
+    background:
+      radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,.6), transparent),
+      radial-gradient(1px 1px at 120px 60px, rgba(255,255,255,.5), transparent),
+      radial-gradient(1px 1px at 260px 20px, rgba(255,255,255,.5), transparent),
+      radial-gradient(1px 1px at 400px 80px, rgba(255,255,255,.4), transparent),
+      radial-gradient(1px 1px at 550px 40px, rgba(255,255,255,.5), transparent),
+      radial-gradient(1px 1px at 700px 90px, rgba(255,255,255,.4), transparent),
+      radial-gradient(1px 1px at 880px 30px, rgba(255,255,255,.5), transparent),
+      radial-gradient(1px 1px at 1020px 70px, rgba(255,255,255,.4), transparent),
+      linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 55%, #16496b 100%);
+    padding-bottom:24px;
+    margin-bottom:16px;
   }
-  .eyebrow::before{content:"";width:22px;height:1px;background:var(--kraft-dark);display:inline-block;}
-  h1{
-    font-family:'Zilla Slab',serif;
-    font-weight:700;
-    font-size:clamp(30px,5vw,42px);
-    margin:8px 0 6px;
-    letter-spacing:-0.01em;
+
+  /* header */
+  header.site-header{padding:20px 0 14px;}
+  .logo{display:flex; flex-direction:column; line-height:1; gap:2px;}
+  .logo .m1{
+    color:#c9ccd1;
+    font-weight:900;
+    font-size:27px;
+    font-style:italic;
+    letter-spacing:1px;
+    text-shadow:1px 1px 0 #4a4d52, -1px 2px 0 #14161a, 0 3px 3px rgba(0,0,0,.6);
   }
-  .sub{color:var(--ink-soft);font-size:15px;max-width:540px;line-height:1.5;}
+  .logo .m2{color:#f2d43c; font-style:italic; font-size:15px; font-weight:700; margin-left:2px;}
+  .header-row{display:flex; justify-content:space-between; align-items:flex-start;}
+  .auth-links{font-size:13px; color:#dfe4f0; margin-top:10px;}
+  .auth-links a{color:#dfe4f0; margin-left:16px;}
+
+  nav.mainnav{
+    background:linear-gradient(180deg,var(--green-nav),var(--green-nav-lo));
+    border-radius:8px;
+    display:flex;
+    box-shadow:0 2px 5px rgba(0,0,0,.4);
+  }
+  nav.mainnav a{
+    color:#eef7df;
+    padding:13px 20px;
+    font-size:14px;
+    font-weight:600;
+  }
+  nav.mainnav a:hover{background:rgba(255,255,255,.08); text-decoration:none; border-radius:8px;}
+
+  /* layout */
+  .layout{display:flex; gap:24px; align-items:flex-start;}
+  .main-col{flex:1; min-width:0;}
+  .side-col{width:320px; flex-shrink:0;}
 
   .card{
-    background:var(--paper-dark);
-    border:1px solid var(--line);
-    border-radius:3px;
-    box-shadow:var(--shadow);
-    position:relative;
-    padding:26px 28px;
+    background:var(--card);
+    border-radius:6px;
+    padding:20px 24px;
+    margin-bottom:18px;
   }
-  .card::before{
-    content:"Картотека";
-    position:absolute;
-    top:-13px;left:24px;
-    background:var(--kraft);
-    color:#2B2110;
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    padding:4px 12px;
-    border-radius:2px;
-    box-shadow:0 2px 4px rgba(0,0,0,0.15);
+  h1.title{font-size:19px; color:#fff; margin:0 0 16px; font-weight:700;}
+  .cover{width:100%; border-radius:3px; display:block; margin-bottom:16px; overflow:hidden;}
+  .cover-img{
+    width:100%; aspect-ratio:960/300; background:
+      linear-gradient(135deg,#3a3f47,#23262b);
+    display:flex; align-items:center; justify-content:center;
+    color:#e5e5e5; font-weight:800; text-align:center; font-size:26px;
+    letter-spacing:1px; border:1px solid #000;
   }
-  .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-  .folder-label{font-size:13px;color:var(--ink-soft);}
-  .folder-label code{
-    font-family:'JetBrains Mono',monospace;
-    background:var(--paper);
-    padding:2px 6px;
-    border-radius:2px;
-    border:1px solid var(--line);
-  }
-  .btn-ghost{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    font-weight:700;
-    letter-spacing:.04em;
-    text-transform:uppercase;
-    cursor:pointer;
-    background:transparent;
-    color:var(--ink-soft);
-    border:1px solid var(--line);
-    border-radius:2px;
-    padding:8px 14px;
-  }
-  .btn-ghost:hover{border-color:var(--ink-soft);color:var(--ink);}
+  h2.section-title{color:var(--green-heading); font-size:16px; margin:24px 0 10px; font-weight:700;}
+  h2.section-title:first-child{margin-top:0;}
+  p.body-text{color:var(--text); margin:0 0 10px;}
 
-  .catalog{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
-  .catalog li{
-    display:flex;align-items:center;justify-content:space-between;gap:14px;
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-left:4px solid var(--kraft-dark);
-    border-radius:2px;
-    padding:14px 16px;
+  .screens-frame{
+    background:#000; border-radius:4px; padding:6px; margin-bottom:10px;
   }
-  .fmeta{display:flex;flex-direction:column;gap:2px;min-width:0;}
-  .fname{
-    font-family:'JetBrains Mono',monospace;
-    font-size:14px;
-    font-weight:500;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  .screens-frame .ph{
+    width:100%; aspect-ratio:960/540; background:#2b2f36; border-radius:2px;
+    display:flex; align-items:center; justify-content:center; color:#77808c; font-size:13px;
   }
-  .fsize{font-size:11.5px;color:var(--ink-soft);}
-  .btn-stamp{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    font-weight:700;
-    letter-spacing:.04em;
-    text-transform:uppercase;
-    text-decoration:none;
-    display:inline-block;
-    background:var(--stamp);
-    color:#FBF3E6;
-    box-shadow:0 2px 0 var(--stamp-dark);
-    border-radius:2px;
-    padding:9px 16px;
-    flex-shrink:0;
+  .thumb-row{display:flex; gap:6px;}
+  .thumb{width:60px; height:44px; background:#2a3145; border-radius:3px; flex-shrink:0; opacity:.7;}
+  .thumb.active{outline:2px solid var(--accent); opacity:1;}
+
+  .video-box{
+    aspect-ratio:16/8.4; background:linear-gradient(135deg,#3a2540,#1c1220);
+    border-radius:4px; display:flex; align-items:center; justify-content:center; color:#e7e2ea;
+    font-weight:700; font-size:20px; margin-bottom:6px;
   }
-  .btn-stamp:hover{background:var(--stamp-dark);}
-  .btn-stamp:active{transform:translateY(1px);box-shadow:none;}
 
-  .empty, .error{color:var(--ink-soft);font-size:14px;padding:22px 4px;text-align:center;}
-  .error{color:var(--stamp-dark);}
+  .craft-row{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
+  .grid3{display:grid; grid-template-columns:repeat(3,42px); grid-template-rows:repeat(3,42px); gap:3px;}
+  .cell{background:var(--slot); border-radius:3px;}
+  .cell.filled{background:#3a4a3a;}
+  .arrow{font-size:22px; color:var(--text-dim);}
+  .result-slot{width:46px; height:46px; background:var(--slot); border-radius:3px;}
 
-  footer{margin-top:26px;color:var(--ink-soft);font-size:12px;text-align:center;}
-  footer code{font-family:'JetBrains Mono',monospace;}
+  ol.steps{margin:0; padding-left:20px; color:var(--text);}
+  ol.steps li{margin-bottom:4px;}
 
-  @media (max-width:520px){
-    .catalog li{flex-direction:column;align-items:flex-start;}
-    .btn-stamp{align-self:flex-start;}
+  table.dl{width:100%; border-collapse:separate; border-spacing:0; font-size:13px; margin-top:8px; border-radius:4px; overflow:hidden;}
+  table.dl th{
+    text-align:left; color:#fff; font-weight:600; padding:9px 12px; background:var(--table-head);
+  }
+  table.dl td{padding:12px; background:var(--row); vertical-align:top; border-top:1px solid #1c1c1c;}
+  table.dl .dlicon{font-size:0;}
+  .dl-circle{
+    width:26px; height:26px; border-radius:50%; background:var(--dl-green);
+    display:inline-flex; align-items:center; justify-content:center; color:#173816; font-size:14px; font-weight:700;
+  }
+  .forge-tag{background:#3a3a3a; color:#c9c9c9; font-size:11px; padding:2px 8px; border-radius:10px; margin-left:6px;}
+
+  .meta-row{display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); font-size:12.5px; padding-top:14px;}
+  .meta-row .author{color:var(--link);}
+
+  .callout-row{display:flex; gap:36px; padding-top:14px; margin-top:10px; font-size:13px; flex-wrap:wrap;}
+  .callout-row div{flex:1; min-width:220px;}
+  .callout-row div strong{display:block; color:#dfe4f0; margin-bottom:3px; font-weight:600;}
+
+  .share-row{display:flex; align-items:center; gap:8px; margin:16px 0 4px; flex-wrap:wrap;}
+  .share-dot{width:28px; height:28px; border-radius:50%; background:#333; display:inline-flex; align-items:center; justify-content:center; font-size:11px; color:#d8d8d8;}
+  .short-link{margin-left:auto; display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-dim);}
+  .short-link input{background:var(--row); border:none; color:var(--link); padding:6px 10px; border-radius:3px; width:190px; font-size:12.5px;}
+
+  /* comments */
+  .comment-tabs{display:flex; gap:6px; margin:12px 0 6px;}
+  .comment-tabs span{display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:4px; font-size:13px; background:var(--row-alt); color:#c9c9c9;}
+  .comment-tabs span.active{background:#3a3a3a; color:#fff;}
+  .comment{display:flex; gap:12px; padding:14px 12px; border-radius:4px;}
+  .comment:nth-child(odd){background:var(--row-alt);}
+  .avatar{width:36px; height:36px; border-radius:50%; background:#3a4550; flex-shrink:0;}
+  .comment-body .who{font-size:12.5px; color:var(--text-dim); margin-bottom:2px;}
+  .comment-body .who b{color:var(--link); font-weight:600;}
+  .comment-body p{margin:2px 0 0; color:#d8d8d8;}
+
+  .pagination{display:flex; justify-content:center; gap:6px; margin:18px 0 8px;}
+  .pagination span, .pagination a{
+    min-width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+    background:var(--row); border-radius:4px; color:#d8d8d8; font-size:13px;
+  }
+  .pagination .cur{background:var(--green-heading); color:#0e2000; font-weight:700;}
+  .login-note{text-align:center; color:var(--text-dim); font-size:13px; margin-bottom:10px;}
+
+  /* sidebar */
+  .side-card{background:var(--card-alt); border-radius:8px; margin-bottom:18px; overflow:hidden;}
+  .side-card h3{margin:0; padding:16px 18px 8px; font-size:15px; color:#fff; font-weight:700;}
+  .menu-grid{display:grid; grid-template-columns:1fr 1fr; gap:2px; padding:6px 12px;}
+  .menu-grid a{display:flex; align-items:center; gap:10px; padding:9px 6px; font-size:13.5px; color:var(--link); border-radius:4px;}
+  .menu-grid a:hover{background:rgba(255,255,255,.05); text-decoration:none;}
+  .menu-grid .ico{
+    width:22px; height:22px; border-radius:3px; flex-shrink:0;
+    background:linear-gradient(180deg,#6fb62f 0 40%, #8a5a34 40% 100%);
+    box-shadow:inset -3px -3px 0 rgba(0,0,0,.25), inset 2px 2px 0 rgba(255,255,255,.15);
+  }
+  .pub-btn{display:flex; align-items:center; gap:8px; margin:6px 12px 14px; padding:10px 14px; font-size:13px; color:#9aa0a6; background:var(--row-alt); border-radius:20px; justify-content:center;}
+
+  .search-box{padding:14px 16px 6px;}
+  .search-row{display:flex; gap:0;}
+  .search-row input{flex:1; padding:8px 10px; background:#fff; border:none; border-radius:3px 0 0 3px; font-size:13px; color:#222;}
+  .search-row button{padding:0 14px; background:var(--green-nav); border:none; border-radius:0 3px 3px 0; color:#fff; cursor:pointer;}
+  .alt-search{display:block; text-align:center; padding:10px; font-size:12.5px; color:var(--text-dim);}
+
+  .catlist{padding:4px 6px 10px;}
+  .catlist details{border-bottom:1px solid rgba(255,255,255,.05);}
+  .catlist summary{padding:10px 10px; cursor:pointer; color:#dfe4f0; font-size:13.5px; font-weight:600; list-style:none;}
+  .catlist summary::-webkit-details-marker{display:none;}
+  .catlist summary:before{content:"▾ "; color:var(--text-dim); font-size:11px;}
+  .catlist ul{list-style:none; margin:0; padding:0 0 8px 26px;}
+  .catlist ul li{padding:3px 0; font-size:12.8px;}
+  .catlist a{color:var(--link);}
+  .catlist .top-link{padding:10px 10px; display:block; font-size:13.5px; color:#dfe4f0; font-weight:600; border-bottom:1px solid rgba(255,255,255,.05);}
+
+  .forum-item{padding:11px 16px; border-bottom:1px solid rgba(255,255,255,.05); font-size:12.8px;}
+  .forum-item:last-child{border-bottom:none;}
+  .forum-item .ftitle{color:var(--link); display:block; margin-bottom:4px;}
+  .forum-item .fmeta{display:flex; justify-content:space-between; color:var(--text-dim);}
+  .badge{background:var(--row); color:#d8d8d8; border-radius:10px; padding:1px 8px; font-size:11px;}
+  .forum-footer{padding:12px 16px; text-align:center; font-size:13px;}
+
+  /* footer */
+  footer{margin-top:26px; padding:20px 0 34px; color:var(--text-dim); font-size:12.5px; text-align:center;}
+  footer a{color:var(--link); margin:0 4px;}
+
+  @media(max-width:880px){
+    .layout{flex-direction:column;}
+    .side-col{width:100%;}
+    nav.mainnav{flex-wrap:wrap; border-radius:6px;}
+    .grid3{grid-template-columns:repeat(3,32px); grid-template-rows:repeat(3,32px);}
   }
 </style>
 </head>
 <body>
+<div class="hero-sky">
 <div class="wrap">
-  <header>
-    <div class="eyebrow">Файловая полка</div>
-    <h1>Картотека</h1>
-    <p class="sub">Здесь показаны файлы из папки репозитория на GitHub. Чтобы добавить файл — просто загрузите его в эту папку через сайт GitHub (Add file → Upload files) или через git. Страница сама подхватит новые файлы.</p>
+  <header class="site-header">
+    <div class="header-row">
+      <div class="logo"><span class="m1">MINECRAFT</span><span class="m2">inside</span></div>
+      <div class="auth-links"><a href="#">Войти</a><a href="#">Зарегистрироваться</a></div>
+    </div>
   </header>
 
-  <section class="card">
-    <div class="toolbar">
-      <span class="folder-label">Папка: <code id="folderLabel">…</code></span>
-      <button class="btn-ghost" id="refreshBtn">Обновить</button>
-    </div>
-    <ul class="catalog" id="fileList">
-      <li class="empty">Загрузка…</li>
-    </ul>
-  </section>
-
-  <footer>Список читается напрямую из <code id="repoLabel"></code> через GitHub API.</footer>
+  <nav class="mainnav">
+    <a href="#">Главная</a>
+    <a href="#">Форум</a>
+    <a href="#">Сервера майнкрафт</a>
+    <a href="#">Рецепты</a>
+    <a href="#">Блоки</a>
+    <a href="#">Инструкции</a>
+    <a href="#">Генераторы</a>
+  </nav>
+</div>
 </div>
 
-<script>
-  // ==== НАСТРОЙТЕ ПОД СВОЙ РЕПОЗИТОРИЙ ====
-  const OWNER  = 'ВАШ_ЛОГИН';       // владелец репозитория, напр. 'ivanov'
-  const REPO   = 'ВАШ_РЕПОЗИТОРИЙ'; // имя репозитория, напр. 'my-files'
-  const BRANCH = 'main';            // ветка
-  const FOLDER = 'files';           // папка с файлами внутри репозитория
-  // =========================================
+<div class="wrap">
+  <div class="layout">
+    <!-- MAIN -->
+    <div class="main-col">
+      <div class="card">
+        <h1 class="title">iCraft [1.7.10]</h1>
 
-  const fileListEl = document.getElementById('fileList');
-  const folderLabel = document.getElementById('folderLabel');
-  const repoLabel = document.getElementById('repoLabel');
-  const refreshBtn = document.getElementById('refreshBtn');
+        <div class="cover">
+          <div class="cover-img">SMARTPHONES<br>IN MINECRAFT</div>
+        </div>
 
-  folderLabel.textContent = '/' + FOLDER;
-  repoLabel.textContent = `${OWNER}/${REPO}`;
+        <h2 class="section-title">Описание</h2>
+        <p class="body-text">Добавит в игру самый настоящий смартфон, с помощью которого вы сможете звонить своим друзьям.</p>
 
-  function humanSize(bytes){
-    if(bytes < 1024) return bytes + ' Б';
-    if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' КБ';
-    return (bytes/1024/1024).toFixed(1) + ' МБ';
-  }
+        <h2 class="section-title">Скриншоты</h2>
+        <div class="screens-frame"><div class="ph">Скриншот геймплея — крафт-меню iCraft</div></div>
+        <div class="thumb-row">
+          <div class="thumb active"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+        </div>
 
-  async function loadFiles(){
-    fileListEl.innerHTML = '<li class="empty">Загрузка…</li>';
-    try{
-      const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURI(FOLDER)}?ref=${encodeURIComponent(BRANCH)}`;
-      const res = await fetch(url, { headers: { 'Accept':'application/vnd.github+json' } });
+        <h2 class="section-title">Видео</h2>
+        <div class="video-box">▶ Обзор модов — iCraft</div>
 
-      if(res.status === 404){
-        fileListEl.innerHTML = '<li class="empty">Папка ещё пуста или не найдена. Загрузите первый файл в неё на GitHub.</li>';
-        return;
-      }
-      if(!res.ok){
-        throw new Error(`GitHub ответил с ошибкой ${res.status}`);
-      }
-
-      const items = (await res.json()).filter(i => i.type === 'file');
-      if(!items.length){
-        fileListEl.innerHTML = '<li class="empty">В папке пока нет файлов.</li>';
-        return;
-      }
-
-      fileListEl.innerHTML = '';
-      items.sort((a,b) => a.name.localeCompare(b.name)).forEach(item => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <div class="fmeta">
-            <span class="fname" title="${item.name}">${item.name}</span>
-            <span class="fsize">${humanSize(item.size)}</span>
+        <h2 class="section-title">Рецепты</h2>
+        <div class="craft-row">
+          <div class="grid3">
+            <div class="cell filled"></div><div class="cell filled"></div><div class="cell filled"></div>
+            <div class="cell filled"></div><div class="cell filled"></div><div class="cell filled"></div>
+            <div class="cell filled"></div><div class="cell filled"></div><div class="cell filled"></div>
           </div>
-          <a class="btn-stamp" href="${item.download_url}" download="${item.name}">Скачать</a>`;
-        fileListEl.appendChild(li);
-      });
-    }catch(err){
-      fileListEl.innerHTML = `<li class="error">Не удалось загрузить список: ${err.message}</li>`;
-    }
-  }
+          <div class="arrow">➜</div>
+          <div class="result-slot"></div>
+        </div>
 
-  refreshBtn.addEventListener('click', loadFiles);
-  loadFiles();
-</script>
+        <h2 class="section-title">Как установить iCraft</h2>
+        <ol class="steps">
+          <li>Скачай и установи <a href="#">Minecraft Forge</a></li>
+          <li>Скачай мод</li>
+          <li>Не распаковывая, скопируй в .minecraft\mods</li>
+          <li>Готово</li>
+        </ol>
+
+        <h2 class="section-title">Скачать iCraft</h2>
+        <table class="dl">
+          <tr><th>#</th><th>Ссылка</th><th>Размер</th><th>Дата</th></tr>
+          <tr>
+            <td class="dlicon"><span class="dl-circle">⬇</span></td>
+            <td>Для 1.7.10 <span class="forge-tag">forge</span><br><a href="#">https://minecraft-inside.ru/download/100710/</a></td>
+            <td>569,92 КБ</td>
+            <td>9 января 2019</td>
+          </tr>
+        </table>
+
+        <div class="meta-row">
+          <span class="author">flamble &nbsp;16 июля 2015, 08:39</span>
+          <span>👁 314.3т &nbsp; 💬 9</span>
+          <span><a href="#">Источник</a></span>
+        </div>
+
+        <div class="callout-row">
+          <div><strong>❓ Не получается установить?</strong><a href="#">Подробная инструкция по установке</a></div>
+          <div><strong>✎ Сообщить о публикации:</strong><a href="#">Не работает, есть обновления, претензии авторского права</a></div>
+        </div>
+
+        <div class="share-row">
+          <span class="share-dot">VK</span>
+          <span class="share-dot">TW</span>
+          <span class="share-dot">OK</span>
+          <span class="share-dot">VB</span>
+          <span class="share-dot">TG</span>
+          <div class="short-link">Короткая ссылка: <input type="text" value="https://minecraft-inside.ru/17617/" readonly></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title" style="margin-top:0;">Комментарии</h2>
+        <div class="comment-tabs">
+          <span class="active">🧊 Minecraft Inside</span>
+          <span>🔵 ВКонтакте</span>
+          <span>💬 Задать вопрос на форуме</span>
+        </div>
+
+        <div class="comment">
+          <div class="avatar"></div>
+          <div class="comment-body">
+            <div class="who"><b>sasha-guide</b>, 25 июля 2026, 14:30</div>
+            <p>фабрик</p>
+          </div>
+        </div>
+        <div class="comment">
+          <div class="avatar"></div>
+          <div class="comment-body">
+            <div class="who"><b>glamrock-foxy</b>, 17 мая 2023, 10:35</div>
+            <p>Пожалуйста добавьте этот мод на 1.16.5 и 1.12.2 🙂</p>
+          </div>
+        </div>
+        <div class="comment">
+          <div class="avatar"></div>
+          <div class="comment-body">
+            <div class="who"><b>slava-dior</b>, 22 ноября 2022, 17:45</div>
+            <p>йоу бро 😎 навртяли конечно получиться на 1.12.2 у разрабов они бросили эту затею 🙁</p>
+          </div>
+        </div>
+        <div class="comment">
+          <div class="avatar"></div>
+          <div class="comment-body">
+            <div class="who"><b>geaio</b>, 15 ноября 2022, 13:03</div>
+            <p>для моей сборке модов подойдёт 🙂 классный мод!</p>
+          </div>
+        </div>
+        <div class="comment">
+          <div class="avatar"></div>
+          <div class="comment-body">
+            <div class="who"><b>YTGOLDIpts</b>, 27 июля 2022, 11:45</div>
+            <p>Мод крутой!Но на старой версии.Жду когда мод выйдет на 1.12.2!</p>
+          </div>
+        </div>
+
+        <div class="pagination">
+          <span class="cur">1</span>
+          <span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>›</span>
+        </div>
+        <p class="login-note"><a href="#">Войди</a> или <a href="#">зарегистрируйся</a>, чтобы комментировать.</p>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="side-col">
+      <div class="side-card">
+        <h3>Меню</h3>
+        <div class="menu-grid">
+          <a href="#"><span class="ico"></span>Моды</a>
+          <a href="#"><span class="ico"></span>Текстуры</a>
+          <a href="#"><span class="ico"></span>Скины</a>
+          <a href="#"><span class="ico"></span>Карты</a>
+          <a href="#"><span class="ico"></span>Видео</a>
+          <a href="#"><span class="ico"></span>Сиды</a>
+          <a href="#"><span class="ico"></span>Команды</a>
+          <a href="#"><span class="ico"></span>Дата-паки</a>
+          <a href="#"><span class="ico"></span>Сборки</a>
+          <a href="#"><span class="ico"></span>Шейдеры</a>
+        </div>
+        <a href="#" class="pub-btn">⛨ Публикации пользователей</a>
+      </div>
+
+      <div class="side-card">
+        <h3>Рецепты крафта</h3>
+        <div style="padding:14px; display:flex; align-items:center; gap:12px;">
+          <div class="grid3" style="grid-template-columns:repeat(3,34px); grid-template-rows:repeat(3,34px);">
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+            <div class="cell"></div><div class="cell filled"></div><div class="cell"></div>
+            <div class="cell"></div><div class="cell filled"></div><div class="cell"></div>
+          </div>
+          <div style="text-align:center; font-size:12px; color:var(--text-dim);">
+            ‹ Свеча ›<br>
+            <div class="result-slot" style="margin:6px auto;"></div>
+          </div>
+        </div>
+        <a href="#" style="display:block; padding:0 14px 12px; font-size:13px;">Все рецепты</a>
+      </div>
+
+      <div class="side-card">
+        <div class="search-box">
+          <div class="search-row">
+            <input type="text" placeholder="Google">
+            <button>🔍</button>
+          </div>
+        </div>
+        <a href="#" class="alt-search">Альтернативный поиск</a>
+      </div>
+
+      <div class="side-card">
+        <h3>Всё для Minecraft</h3>
+        <div class="catlist">
+          <details open>
+            <summary>Нужное</summary>
+            <ul>
+              <li><a href="#">Minecraft Forge / Neoforge / Fabric</a></li>
+              <li><a href="#">ETF + EMF / OptiFine / Sodium / Iris</a></li>
+              <li><a href="#">Just Enough Items / EMI</a></li>
+              <li><a href="#">Xaero's Map / JourneyMap</a></li>
+              <li><a href="#">Программы</a></li>
+            </ul>
+          </details>
+          <details open>
+            <summary>Minecraft 26.2</summary>
+            <ul>
+              <li><a href="#">Моды для Minecraft 26.2</a></li>
+              <li><a href="#">Текстуры для Minecraft 26.2</a></li>
+            </ul>
+          </details>
+          <details open>
+            <summary>Minecraft 26.1.2</summary>
+            <ul>
+              <li><a href="#">Моды для Minecraft 26.1.2</a></li>
+              <li><a href="#">Текстуры для Minecraft 26.1.2</a></li>
+            </ul>
+          </details>
+          <details open>
+            <summary>Minecraft 1.21.11</summary>
+            <ul>
+              <li><a href="#">Моды для Minecraft 1.21.11</a></li>
+              <li><a href="#">Карты для Minecraft 1.21.11</a></li>
+              <li><a href="#">Текстуры для Minecraft 1.21.11</a></li>
+            </ul>
+          </details>
+          <details open>
+            <summary>Minecraft 1.21.1</summary>
+            <ul>
+              <li><a href="#">Моды для Minecraft 1.21.1</a></li>
+              <li><a href="#">Карты для Minecraft 1.21.1</a></li>
+              <li><a href="#">Текстуры для Minecraft 1.21.1</a></li>
+            </ul>
+          </details>
+          <details open>
+            <summary>Minecraft 1.20.1</summary>
+            <ul>
+              <li><a href="#">Моды для Minecraft 1.20.1</a></li>
+              <li><a href="#">Карты для Minecraft 1.20.1</a></li>
+              <li><a href="#">Текстуры для Minecraft 1.20.1</a></li>
+            </ul>
+          </details>
+          <a href="#" class="top-link">Minecraft 1.19.2</a>
+          <a href="#" class="top-link">Minecraft 1.18.2</a>
+          <details open>
+            <summary>Minecraft 1.16.5</summary>
+            <ul>
+              <li><a href="#">Моды для Minecraft 1.16.5</a></li>
+              <li><a href="#">Карты для Minecraft 1.16.5</a></li>
+              <li><a href="#">Текстуры для Minecraft 1.16.5</a></li>
+            </ul>
+          </details>
+          <details open>
+            <summary>Minecraft 1.12.2</summary>
+            <ul>
+              <li><a href="#">Моды для Minecraft 1.12.2</a></li>
+              <li><a href="#">Карты для Minecraft 1.12.2</a></li>
+              <li><a href="#">Текстуры для Minecraft 1.12.2</a></li>
+              <li><a href="#">Сервера для Minecraft 1.12.2</a></li>
+            </ul>
+          </details>
+          <a href="#" class="top-link">Minecraft 1.7.10</a>
+        </div>
+      </div>
+
+      <div class="side-card">
+        <h3>Последние сообщения на форуме</h3>
+        <div class="forum-item">
+          <a href="#" class="ftitle">Общий чат Minecraft Inside</a>
+          <div class="fmeta"><span>therealIrem, 2 часа назад</span><span class="badge">17.2т</span></div>
+        </div>
+        <div class="forum-item">
+          <a href="#" class="ftitle">Передоа ИИшных статей на форуме</a>
+          <div class="fmeta"><span>DOh1221, 2 минуты назад</span><span class="badge">28</span></div>
+        </div>
+        <div class="forum-item">
+          <a href="#" class="ftitle">ищу друга на майнкрафт бета 1.8</a>
+          <div class="fmeta"><span>DOh1221, 6 минут назад</span><span class="badge">6</span></div>
+        </div>
+        <div class="forum-item">
+          <a href="#" class="ftitle">OldCraft [1.5.2 - 1.12.2] ★</a>
+          <div class="fmeta"><span>DOh1221, 7 минут назад</span><span class="badge">3572</span></div>
+        </div>
+        <div class="forum-item">
+          <a href="#" class="ftitle">ExWill ★ Лучший Бета 1.7.3 сервер во всём РуМайне ★</a>
+          <div class="fmeta"><span>DOh1221, 7 минут назад</span><span class="badge">140</span></div>
+        </div>
+        <div class="forum-item">
+          <a href="#" class="ftitle">Набор в команду YouTube. Для съёмок роликов, фильмов, сериалов, обзоров и т.д. в Minecraft</a>
+          <div class="fmeta"><span>Sian_Top1, 14 минут назад</span><span class="badge">922</span></div>
+        </div>
+        <div class="forum-footer"><a href="#">Перейти на форум</a></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    2013–2026, Неофициальный сайт по игре Майнкрафт &nbsp;•&nbsp;
+    <a href="#">support@minecraft-inside.ru</a> &nbsp;•&nbsp;
+    <a href="#">ВКонтакте</a> &nbsp;•&nbsp;
+    <a href="#">Телеграм</a> &nbsp;•&nbsp;
+    <a href="#">Мобильная версия</a> &nbsp;•&nbsp;
+    <a href="#">mcpe-inside.ru</a><br>
+    Minecraft является собственностью Mojang Studios, компания не имеет отношения к данному сайту. &nbsp;
+    <a href="#">Правила сайта</a> • <a href="#">Авторам</a> • <a href="#">Privacy Policy</a>
+  </footer>
+</div>
 </body>
 </html>
