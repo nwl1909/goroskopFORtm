@@ -96,14 +96,23 @@
     margin-bottom:18px;
   }
   h1.title{font-size:19px; color:#fff; margin:0 0 16px; font-weight:700;}
-  .cover{width:100%; border-radius:3px; display:block; margin-bottom:16px; overflow:hidden;}
+  .cover{width:100%; border-radius:3px; display:block; margin-bottom:16px; overflow:hidden; position:relative;}
   .cover-img{
     width:100%; aspect-ratio:960/300; background:
       linear-gradient(135deg,#3a3f47,#23262b);
+    background-size:cover; background-position:center;
     display:flex; align-items:center; justify-content:center;
     color:#e5e5e5; font-weight:800; text-align:center; font-size:26px;
     letter-spacing:1px; border:1px solid #000;
   }
+  .upload-btn{
+    background:var(--row); color:#d8d8d8; border:none; padding:7px 13px; border-radius:5px;
+    font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+  }
+  .upload-btn:hover{background:#3a3a3a;}
+  .cover .upload-btn{position:absolute; right:10px; bottom:10px; background:rgba(20,20,20,.75);}
+  .cover .upload-btn:hover{background:rgba(20,20,20,.92);}
+  .upload-row{display:flex; gap:8px; margin:2px 0 14px; flex-wrap:wrap;}
   h2.section-title{color:var(--green-heading); font-size:16px; margin:24px 0 10px; font-weight:700;}
   h2.section-title:first-child{margin-top:0;}
   p.body-text{color:var(--text); margin:0 0 10px;}
@@ -113,16 +122,23 @@
   }
   .screens-frame .ph{
     width:100%; aspect-ratio:960/540; background:#2b2f36; border-radius:2px;
-    display:flex; align-items:center; justify-content:center; color:#77808c; font-size:13px;
+    background-size:cover; background-position:center;
+    display:flex; align-items:center; justify-content:center; color:#77808c; font-size:13px; text-align:center; padding:0 20px;
   }
-  .thumb-row{display:flex; gap:6px;}
-  .thumb{width:60px; height:44px; background:#2a3145; border-radius:3px; flex-shrink:0; opacity:.7;}
+  .thumb-row{display:flex; gap:6px; flex-wrap:wrap;}
+  .thumb{width:60px; height:44px; background:#2a3145; background-size:cover; background-position:center; border-radius:3px; flex-shrink:0; opacity:.7; cursor:pointer;}
   .thumb.active{outline:2px solid var(--accent); opacity:1;}
+  .thumb.add-thumb{
+    display:flex; align-items:center; justify-content:center; color:var(--text-dim);
+    background:var(--row-alt); font-size:20px; opacity:1;
+  }
+  .thumb.add-thumb:hover{background:#333;}
 
   .video-box{
     aspect-ratio:16/8.4; background:linear-gradient(135deg,#3a2540,#1c1220);
+    background-size:cover; background-position:center;
     border-radius:4px; display:flex; align-items:center; justify-content:center; color:#e7e2ea;
-    font-weight:700; font-size:20px; margin-bottom:6px;
+    font-weight:700; font-size:20px; margin-bottom:6px; cursor:pointer; text-align:center; padding:0 20px;
   }
 
   .craft-row{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
@@ -146,6 +162,8 @@
     display:inline-flex; align-items:center; justify-content:center; color:#173816; font-size:14px; font-weight:700;
   }
   .forge-tag{background:#3a3a3a; color:#c9c9c9; font-size:11px; padding:2px 8px; border-radius:10px; margin-left:6px;}
+  .reset-link{font-size:12px; color:var(--text-dim); float:right; cursor:pointer;}
+  .reset-link:hover{color:#c9c9c9; text-decoration:underline;}
 
   .meta-row{display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); font-size:12.5px; padding-top:14px;}
   .meta-row .author{color:var(--link);}
@@ -256,24 +274,28 @@
         <h1 class="title">iCraft [1.7.10]</h1>
 
         <div class="cover">
-          <div class="cover-img">SMARTPHONES<br>IN MINECRAFT</div>
+          <div class="cover-img" id="coverImg">SMARTPHONES<br>IN MINECRAFT</div>
+          <label class="upload-btn" for="coverInput">📷 Заменить обложку</label>
+          <input type="file" id="coverInput" accept="image/*" hidden>
         </div>
 
         <h2 class="section-title">Описание</h2>
         <p class="body-text">Добавит в игру самый настоящий смартфон, с помощью которого вы сможете звонить своим друзьям.</p>
 
         <h2 class="section-title">Скриншоты</h2>
-        <div class="screens-frame"><div class="ph">Скриншот геймплея — крафт-меню iCraft</div></div>
-        <div class="thumb-row">
-          <div class="thumb active"></div>
-          <div class="thumb"></div>
-          <div class="thumb"></div>
-          <div class="thumb"></div>
-          <div class="thumb"></div>
+        <div class="screens-frame"><div class="ph" id="mainScreen">Скриншот геймплея — крафт-меню iCraft</div></div>
+        <div class="thumb-row" id="thumbRow">
+          <label class="thumb add-thumb" for="screensInput">+</label>
         </div>
+        <input type="file" id="screensInput" accept="image/*" multiple hidden>
 
         <h2 class="section-title">Видео</h2>
-        <div class="video-box">▶ Обзор модов — iCraft</div>
+        <div class="video-box" id="videoBox">▶ Обзор модов — iCraft</div>
+        <div class="upload-row">
+          <label class="upload-btn" for="videoThumbInput">🖼 Обложка видео</label>
+          <input type="file" id="videoThumbInput" accept="image/*" hidden>
+          <button class="upload-btn" id="videoLinkBtn" type="button">🔗 Ссылка на видео</button>
+        </div>
 
         <h2 class="section-title">Рецепты</h2>
         <div class="craft-row">
@@ -294,14 +316,19 @@
           <li>Готово</li>
         </ol>
 
-        <h2 class="section-title">Скачать iCraft</h2>
+        <h2 class="section-title">Скачать iCraft <span class="reset-link" id="resetBtn">сбросить мои файлы</span></h2>
+        <div class="upload-row">
+          <label class="upload-btn" for="fileInput">📦 Загрузить файл мода</label>
+          <input type="file" id="fileInput" hidden>
+          <button class="upload-btn" id="fileLinkBtn" type="button">🔗 Указать ссылку на файл</button>
+        </div>
         <table class="dl">
           <tr><th>#</th><th>Ссылка</th><th>Размер</th><th>Дата</th></tr>
           <tr>
-            <td class="dlicon"><span class="dl-circle">⬇</span></td>
-            <td>Для 1.7.10 <span class="forge-tag">forge</span><br><a href="#">https://minecraft-inside.ru/download/100710/</a></td>
-            <td>569,92 КБ</td>
-            <td>9 января 2019</td>
+            <td class="dlicon"><a id="dlIconLink" href="#"><span class="dl-circle">⬇</span></a></td>
+            <td>Для 1.7.10 <span class="forge-tag">forge</span><br><a id="dlLink" href="#">https://minecraft-inside.ru/download/100710/</a></td>
+            <td id="dlSize">569,92 КБ</td>
+            <td id="dlDate">9 января 2019</td>
           </tr>
         </table>
 
@@ -539,5 +566,164 @@
     <a href="#">Правила сайта</a> • <a href="#">Авторам</a> • <a href="#">Privacy Policy</a>
   </footer>
 </div>
+
+<script>
+(function(){
+  var LS = window.localStorage;
+  var MAX_FILE = 4.5 * 1024 * 1024; // ~4.5MB safe limit for localStorage/data URLs
+
+  function fmtSize(bytes){
+    if(bytes > 1024*1024) return (bytes/1024/1024).toFixed(2).replace('.', ',') + ' МБ';
+    return (bytes/1024).toFixed(2).replace('.', ',') + ' КБ';
+  }
+  function fmtDate(d){
+    var months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function readAsDataURL(file){
+    return new Promise(function(resolve,reject){
+      var r = new FileReader();
+      r.onload = function(){ resolve(r.result); };
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+  }
+
+  /* ---- Cover image ---- */
+  var coverImg = document.getElementById('coverImg');
+  var coverInput = document.getElementById('coverInput');
+  function renderCover(){
+    var data = LS.getItem('mi_cover');
+    if(data){ coverImg.style.backgroundImage = 'url(' + data + ')'; coverImg.textContent=''; }
+  }
+  coverInput.addEventListener('change', function(e){
+    var f = e.target.files[0]; if(!f) return;
+    readAsDataURL(f).then(function(data){ LS.setItem('mi_cover', data); renderCover(); });
+  });
+
+  /* ---- Screenshots gallery ---- */
+  var thumbRow = document.getElementById('thumbRow');
+  var screensInput = document.getElementById('screensInput');
+  var mainScreen = document.getElementById('mainScreen');
+  var activeIdx = 0;
+
+  function getScreens(){ try{ return JSON.parse(LS.getItem('mi_screens') || '[]'); }catch(e){ return []; } }
+  function showMain(src){ mainScreen.style.backgroundImage = 'url(' + src + ')'; mainScreen.textContent=''; }
+  function renderScreens(){
+    var arr = getScreens();
+    thumbRow.innerHTML = '';
+    arr.forEach(function(src, i){
+      var d = document.createElement('div');
+      d.className = 'thumb' + (i === activeIdx ? ' active' : '');
+      d.style.backgroundImage = 'url(' + src + ')';
+      d.addEventListener('click', function(){ activeIdx = i; showMain(src); renderScreens(); });
+      thumbRow.appendChild(d);
+    });
+    var addLabel = document.createElement('label');
+    addLabel.className = 'thumb add-thumb';
+    addLabel.setAttribute('for', 'screensInput');
+    addLabel.textContent = '+';
+    thumbRow.appendChild(addLabel);
+    if(arr.length) showMain(arr[activeIdx] || arr[0]);
+  }
+  screensInput.addEventListener('change', function(e){
+    var files = Array.prototype.slice.call(e.target.files);
+    Promise.all(files.map(readAsDataURL)).then(function(datas){
+      var arr = getScreens().concat(datas).slice(0, 10);
+      LS.setItem('mi_screens', JSON.stringify(arr));
+      activeIdx = arr.length - datas.length;
+      renderScreens();
+    });
+  });
+
+  /* ---- Video ---- */
+  var videoBox = document.getElementById('videoBox');
+  var videoThumbInput = document.getElementById('videoThumbInput');
+  var videoLinkBtn = document.getElementById('videoLinkBtn');
+  function renderVideo(){
+    var thumb = LS.getItem('mi_video_thumb');
+    if(thumb){ videoBox.style.backgroundImage = 'url(' + thumb + ')'; }
+  }
+  videoThumbInput.addEventListener('change', function(e){
+    var f = e.target.files[0]; if(!f) return;
+    readAsDataURL(f).then(function(data){ LS.setItem('mi_video_thumb', data); renderVideo(); });
+  });
+  videoLinkBtn.addEventListener('click', function(){
+    var url = prompt('Вставьте ссылку на видео (например, YouTube):', LS.getItem('mi_video_link') || 'https://');
+    if(url){ LS.setItem('mi_video_link', url); }
+  });
+  videoBox.addEventListener('click', function(){
+    var url = LS.getItem('mi_video_link');
+    if(url) window.open(url, '_blank');
+    else videoLinkBtn.click();
+  });
+
+  /* ---- Download file ---- */
+  var fileInput = document.getElementById('fileInput');
+  var fileLinkBtn = document.getElementById('fileLinkBtn');
+  var dlIconLink = document.getElementById('dlIconLink');
+  var dlLink = document.getElementById('dlLink');
+  var dlSize = document.getElementById('dlSize');
+  var dlDate = document.getElementById('dlDate');
+
+  function renderDownload(){
+    var link = LS.getItem('mi_file_link');
+    var name = LS.getItem('mi_file_name');
+    var data = LS.getItem('mi_file_data');
+    var size = LS.getItem('mi_file_size');
+    var date = LS.getItem('mi_file_date');
+    if(link){
+      dlIconLink.href = link; dlIconLink.removeAttribute('download');
+      dlLink.href = link; dlLink.textContent = link;
+      if(size) dlSize.textContent = size;
+      if(date) dlDate.textContent = date;
+    } else if(data && name){
+      dlIconLink.href = data; dlIconLink.setAttribute('download', name);
+      dlLink.href = data; dlLink.setAttribute('download', name); dlLink.textContent = name;
+      dlSize.textContent = size || '';
+      dlDate.textContent = date || '';
+    }
+  }
+  fileInput.addEventListener('change', function(e){
+    var f = e.target.files[0]; if(!f) return;
+    if(f.size > MAX_FILE){
+      alert('Файл больше ~4,5 МБ. Локальное хранилище браузера такое не потянет.\nЗалейте файл в GitHub (например, в Releases) и нажмите «Указать ссылку на файл», вставив прямую ссылку на него.');
+      return;
+    }
+    readAsDataURL(f).then(function(data){
+      LS.removeItem('mi_file_link');
+      LS.setItem('mi_file_data', data);
+      LS.setItem('mi_file_name', f.name);
+      LS.setItem('mi_file_size', fmtSize(f.size));
+      LS.setItem('mi_file_date', fmtDate(new Date()));
+      renderDownload();
+    });
+  });
+  fileLinkBtn.addEventListener('click', function(){
+    var url = prompt('Вставьте прямую ссылку на файл (например, из GitHub Releases):', LS.getItem('mi_file_link') || 'https://');
+    if(url){
+      LS.removeItem('mi_file_data'); LS.removeItem('mi_file_name');
+      LS.setItem('mi_file_link', url);
+      LS.setItem('mi_file_size', '—');
+      LS.setItem('mi_file_date', fmtDate(new Date()));
+      renderDownload();
+    }
+  });
+
+  /* ---- Reset ---- */
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    if(confirm('Удалить все загруженные вами фото и файл, вернуть заглушки?')){
+      ['mi_cover','mi_screens','mi_video_thumb','mi_video_link','mi_file_link','mi_file_data','mi_file_name','mi_file_size','mi_file_date']
+        .forEach(function(k){ LS.removeItem(k); });
+      location.reload();
+    }
+  });
+
+  renderCover();
+  renderScreens();
+  renderVideo();
+  renderDownload();
+})();
+</script>
 </body>
 </html>
